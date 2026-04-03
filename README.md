@@ -25,11 +25,11 @@ Each trigger causes the app to call a function which collects user IDs and phone
 
 Fields being sent (spoofed):
 
-![screenshot6](https://github.com/user-attachments/assets/38e0afe2-179e-4822-bd75-e455d638f767)
+![screenshot4](https://github.com/user-attachments/assets/f3f2e97c-46de-49d2-b017-1d3b16530dac)  
 
 Google's review... yeah sure
 
-![screenshot4](https://github.com/user-attachments/assets/f3f2e97c-46de-49d2-b017-1d3b16530dac)
+![screenshot6](https://github.com/user-attachments/assets/38e0afe2-179e-4822-bd75-e455d638f767)
 
 ## Versions Analysis
 
